@@ -1,0 +1,10 @@
+.svglogo{
+    width:30vw;
+    height:auto;
+}
+.containerBox{
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    flex-wrap: wrap;
+}
