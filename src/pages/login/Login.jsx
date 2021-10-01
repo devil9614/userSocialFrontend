@@ -3,18 +3,40 @@ import Card from '@mui/material/Card'
 import {ReactComponent as LoginLogo} from '../../assets/login.svg'
 import { Button, Container, Grid, TextField } from '@mui/material'
 import { useHistory } from 'react-router-dom'
+import {gql,useQuery} from "@apollo/client"
 
 const Login = () => {
   const [username,setUsername] = useState("")
   const [password,setPassword] = useState("")
   const history = useHistory()
   const handleUsernameChange = (e) => {
+    e.preventDefault()
     console.log(username)
-    setUsername(e.value.target)
+    setUsername(e.target.value)
   }
   const handlePasswordChange = (e) => {
+    e.preventDefault()
     console.log(password)
     setPassword(e.target.value)
+  }
+  const userQL = gql `mutation LoginMutation {
+    login(options: {
+      username:"sujan9614",
+      password:"123566"
+    }) {
+      accessToken
+    }
+  }
+  `
+  console.log(userQL)
+  const UsersQuery = () => {
+    const {loading,error,data} = useQuery(userQL)
+    if (loading) return <p>Loading ... </p>
+    if (error) return <p>Something wrong happened </p>
+    console.log(data)
+  }
+  const handleLogin = () => {
+    UsersQuery()
   }
   return (
     <div className = "d-flex justify-content-around align-items-center flex-wrap" style = {{maxWidth:"100vw",height:"100vh"}}>
@@ -42,14 +64,15 @@ const Login = () => {
                         size="small"
                         type="password"
                         variant="outlined"
-                        borderStyle= "none"
                         onChange = {e => handlePasswordChange(e)}
                       />
                     </Grid>
                   </Grid>
                 </Grid>
                 <Grid item xs={12} style = {{justifyContent:"center",alignItems:"center"}}>
-                  <Button color="primary"  type="submit" variant="contained">
+                  <Button color="primary"  type="submit" variant="contained" onClick = {
+                    handleLogin
+                  }>
                     Log in
                   </Button>
                 </Grid>

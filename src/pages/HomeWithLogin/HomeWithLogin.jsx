@@ -27,7 +27,7 @@ const HomeWithLogin = () => {
     <UserCards user = {user}/>
   )
   return (
-    <div>
+    <div style = {{overflowY:"hidden"}}>
     <h1 className = "text-center p-4">Users</h1>
       <div className = "d-flex flex-column justify-content-center align-items-center" style= {{minWidth:"100vw"}}>
         {listItems}
