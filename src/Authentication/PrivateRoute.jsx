@@ -6,14 +6,18 @@ import { useAuth } from './AuthProvide'
 const PrivateRoute = ({children,...rest}) => {
     const {login} = useAuth()
   return (
-    <Route>
+    <Route
       {...rest}
-      render = {
-          ({location}) => (
-              (login)?(children):(<HomeWL/>)
-          )
+      render={
+        ({ location }) => (
+          (login)
+            ? (
+              children
+            ) : (
+              <HomeWL/>
+            ))
       }
-    </Route>
+    />
   )
 }
 

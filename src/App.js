@@ -6,8 +6,10 @@ import HomeWithLogin from './pages/HomeWithLogin/HomeWithLogin'
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 import UserFeed from "./pages/userFeed/UserFeed";
 import { ApolloProvider, ApolloClient,InMemoryCache, HttpLink, ApolloLink, concat} from '@apollo/client'
+import AuthProvide from "./Authentication/AuthProvide";
+import PrivateRoute from "./Authentication/PrivateRoute";
 
-const httpLink = new HttpLink({ uri: 'https://localhost:4000/graphql' });
+const httpLink = new HttpLink({ uri: 'http://localhost:4000/graphql' });
 
 const authMiddleware = new ApolloLink((operation, forward) => {
   const token = localStorage.getItem('token')
@@ -33,22 +35,25 @@ function App() {
     <div className="App">
     <ApolloProvider client = {client}>
     <Router>
+    <AuthProvide>
     <div >
-      <Switch>
-        <Route exact path="/">
-          <HomeWithLogin />
-        </Route>
-        <Route path="/login">
-          <Login />
-        </Route>
-        <Route path="/register">
-          <Register />
-        </Route>
-        <Route path = "/user">
-          <UserFeed/>
-        </Route>
-      </Switch>
-    </div>
+    <Switch>
+      <PrivateRoute exact path="/">
+        <HomeWithLogin />
+      </PrivateRoute>
+      <Route path="/login">
+        <Login />
+      </Route>
+      <Route path="/register">
+        <Register />
+      </Route>
+      <Route path = "/user">
+        <UserFeed/>
+      </Route>
+    </Switch>
+  </div>
+    </AuthProvide>
+    
   </Router>
   </ApolloProvider>
     </div>

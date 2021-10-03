@@ -1,9 +1,32 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Card from '@mui/material/Card'
 import {ReactComponent as LoginLogo} from '../../assets/login.svg'
 import { Button, Container, Grid, TextField } from '@mui/material'
 import { useHistory } from 'react-router-dom'
-import {gql,useQuery} from "@apollo/client"
+import {gql,useMutation,useQuery} from "@apollo/client"
+
+
+
+
+
+const UseQuery = ({UseQL}) => {
+  const [AccToken,{loading,error,data}] = useMutation(UseQL)
+
+  if (loading) return <p>Loading ... </p>
+  if (error){
+    console.log(error)
+    return <p>Something wrong happened</p>
+  } 
+  AccToken()
+  if (data){
+    console.log(data.login.accessToken,"data of Access token")
+    localStorage.setItem("token",data.login.accessToken)
+  }
+  
+  return null
+}
+
+
 
 const Login = () => {
   const [username,setUsername] = useState("")
@@ -19,24 +42,20 @@ const Login = () => {
     console.log(password)
     setPassword(e.target.value)
   }
-  const userQL = gql `mutation LoginMutation {
-    login(options: {
-      username:"sujan9614",
-      password:"123566"
-    }) {
-      accessToken
-    }
+  
+  const UseQL = gql `
+mutation LoginMutation {
+  login(options: {
+    username:${username},
+    password:${password}
+  }) {
+    accessToken
   }
-  `
-  console.log(userQL)
-  const UsersQuery = () => {
-    const {loading,error,data} = useQuery(userQL)
-    if (loading) return <p>Loading ... </p>
-    if (error) return <p>Something wrong happened </p>
-    console.log(data)
-  }
+}
+`
+
   const handleLogin = () => {
-    UsersQuery()
+      UseQuery(UseQL)
   }
   return (
     <div className = "d-flex justify-content-around align-items-center flex-wrap" style = {{maxWidth:"100vw",height:"100vh"}}>
@@ -70,7 +89,7 @@ const Login = () => {
                   </Grid>
                 </Grid>
                 <Grid item xs={12} style = {{justifyContent:"center",alignItems:"center"}}>
-                  <Button color="primary"  type="submit" variant="contained" onClick = {
+                  <Button color="primary"  variant="contained" onClick = {
                     handleLogin
                   }>
                     Log in
