@@ -1,0 +1,15 @@
+.main-navbar{
+    width:80vw;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    overflow:hidden;
+    margin-top:2vh;
+}
+.logo{
+    margin-left:2rem;
+}
+.button-nav{
+    margin-top:4rem;
+    
+}

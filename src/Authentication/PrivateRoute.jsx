@@ -1,10 +1,10 @@
 import React from 'react'
-import { Route } from 'react-router-dom'
-import HomeWL from '../pages/HomeWL'
+import { Route,Redirect } from 'react-router-dom'
 import { useAuth } from './AuthProvide'
 
 const PrivateRoute = ({children,...rest}) => {
     const {login} = useAuth()
+    console.log(login,"login on private route")
   return (
     <Route
       {...rest}
@@ -14,7 +14,7 @@ const PrivateRoute = ({children,...rest}) => {
             ? (
               children
             ) : (
-              <HomeWL/>
+              <Redirect to ="/login" />
             ))
       }
     />

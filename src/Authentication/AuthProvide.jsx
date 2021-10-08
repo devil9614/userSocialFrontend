@@ -1,4 +1,5 @@
-import { useQuery,gql } from '@apollo/client'
+import { useQuery,useLazyQuery } from '@apollo/client'
+import gql from "graphql-tag";
 import React, { useContext, useEffect, useMemo, useState } from 'react'
 const AuthProvider = React.createContext()
 
@@ -10,34 +11,21 @@ const UsersQL = gql `query Query {
   validUser
 }
 `
-const UsersQuery = ({setLogin}) => {
-  const {loading,error,data} = useQuery(UsersQL)
-
-  if (loading) return <p>Loading ... </p>
-  if (error){
-    console.log(error)
-    return null
-  } 
-  console.log(data,"data1")
-  if (data.validUser){
-    setLogin(true)
-  }
-  return null
-}
-
-const AuthProvide = ({children}) => {
-    const [login,setLogin] = useState()
+const AuthProvide =  ({children}) => {
+  const [login,setLogin] = useState()
     const loginState = useMemo(() => ({login,setLogin}),[login,setLogin])
-    const checkLogin = () => {
-        // logic of checking the login state of the user
-    }
+  const [queryFetch,{loading,error,data}] = useLazyQuery(UsersQL)
     useEffect(() =>{
-        checkLogin()
-    },[])
-    console.log(login)
+        queryFetch()
+        if (error){
+        } 
+        if (data){if (data.validUser){
+          setLogin(true)
+        }}
+          
+    },[loading])
   return (
     <AuthProvider.Provider value = {loginState}>
-      <UsersQuery setLogin = {setLogin}/>
       {children}
     </AuthProvider.Provider>
   )
